@@ -31,4 +31,4 @@ doc2 = a.Document('../res/samples/B/data-sample-1.ann')
 # doc.make_gold()
 statistics = doc2.compare_to_gold(doc)
 
-print statistics
+print(statistics)

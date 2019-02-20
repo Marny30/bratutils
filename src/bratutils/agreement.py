@@ -752,29 +752,29 @@ class Document:
         parallel_doc.sort()
         self.remove_duplicates()
         parallel_doc.remove_duplicates()
-        for tag in self.tags:
+        for tag in parallel_doc.tags:
 
             # tags with coinciding indices
-            coinsiding_tags = tag.get_coinciding_anns(parallel_doc.tags)
+            coinsiding_tags = tag.get_coinciding_anns(self.tags)
             if coinsiding_tags:
-                self.handle_coinsiding_tags(tag, coinsiding_tags, muc)
+                parallel_doc.handle_coinsiding_tags(tag, coinsiding_tags, muc)
                 continue
 
             # tags contained in the current annotation
-            contained_tags = tag.get_contained_anns(parallel_doc.tags)
+            contained_tags = tag.get_contained_anns(self.tags)
             if contained_tags:
-                self.handle_contained_tags(tag, contained_tags, muc)
+                parallel_doc.handle_contained_tags(tag, contained_tags, muc)
                 continue
 
             # tags containing the current tag
-            containing_tags = tag.get_containing_ann(parallel_doc.tags)
+            containing_tags = tag.get_containing_ann(self.tags)
             if containing_tags:
-                self.handle_containing_tags(tag, containing_tags, muc)
+                parallel_doc.handle_containing_tags(tag, containing_tags, muc)
         # Spurious tags are tags that are not fully contained in any gold tag
-        muc.spu = self.count_remaining(parallel_doc.tags)
+        muc.spu = parallel_doc.count_remaining(self.tags)
 
         # Missing tags are tags that are not fully contained in any guess tag
-        muc.mis = self.count_remaining(self.tags)
+        muc.mis = parallel_doc.count_remaining(parallel_doc.tags)
 
         muc.update_table()
         return muc
@@ -918,15 +918,15 @@ class DocumentCollection:
             doc.reset_markers()
 
     def compare_to_gold(self, gold_collection):
-        """Compare this document collection to a parallel gold standard version
+        """Compare this document collection to a parallel the gold standard version
         of the same documents.
 
-        :param gold_collection: gold standard parallel document collection
+        :param gold_collection: gold parallel document collection
         :return: accumulated average agreement results
         :rtype: MucTable
         """
         muc = MucTable()
-        gold_collection.make_gold()
+        #gold_collection.make_gold()
         for key in self.documents.keys():
             doc = self.documents.get(key)
             gold = gold_collection.documents.get(key)
@@ -934,7 +934,7 @@ class DocumentCollection:
                 muc.add_table(doc.compare_to_gold(gold))
             else:
                 print("Warning: document naming mismatch. " + key)
-        gold_collection.reverse_gold()
+        #gold_collection.reverse_gold()
         return muc
 
     def filter_document_collection(self, filters):

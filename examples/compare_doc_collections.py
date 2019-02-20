@@ -22,7 +22,7 @@ __author__ = 'Aleksandar Savkov'
 dc = a.DocumentCollection('../res/samples/A/')
 dc2 = a.DocumentCollection('../res/samples/B/')
 
-dc.make_gold()
+#dc.make_gold()
 statistics = dc2.compare_to_gold(dc)
 
-print statistics
+print(statistics)
